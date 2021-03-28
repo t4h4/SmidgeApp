@@ -8,6 +8,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Smidge;
+using Smidge.Options;
+using Smidge.Cache;
 
 namespace SmidgeApp
 {
@@ -23,11 +26,13 @@ namespace SmidgeApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSmidge(Configuration.GetSection("smidge")); // smidge kutuphanesinin servisini ekledik.
+
             services.AddControllersWithViews();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env) //middleware eklenen yer.
         {
             if (env.IsDevelopment())
             {
@@ -45,6 +50,15 @@ namespace SmidgeApp
             app.UseRouting();
 
             app.UseAuthorization();
+
+            //smidge kütüphanesi middleware yapýsý. 
+
+            app.UseSmidge(bundle =>
+            {
+                bundle.CreateJs("my-js-bundle", "~/js/"); //iki dosyayý da bundle yaptýk.
+                bundle.CreateCss("my-css-bundle", "~/css/site.css", "~/lib/bootstrap/dist/css/bootstrap.css");
+
+            });
 
             app.UseEndpoints(endpoints =>
             {
