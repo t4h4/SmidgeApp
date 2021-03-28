@@ -55,9 +55,12 @@ namespace SmidgeApp
 
             app.UseSmidge(bundle =>
             {
-                bundle.CreateJs("my-js-bundle", "~/js/"); //iki dosyayý da bundle yaptýk.
-                bundle.CreateCss("my-css-bundle", "~/css/site.css", "~/lib/bootstrap/dist/css/bootstrap.css");
+                // EnableCompositeProcessing diyerek debug'da dahi olsa birleþtirme iþlemini gerçekleþtir. EnableFileWatcher oluþturdugum bundle'da dosyalarý izle, bir deðiþiklik olursa yeniden oluþtur. SetCacheBusterType<AppDomainLifetimeCacheBuster> ile uygulama ayaða kalkýnca cache'i boz ve yeniden oluþtur.
+                // browser'a oluþturulan bundle dosyasýný hiç cache'leme demek için de CacheControlOptions giriyoruz. enableEtag: false yapýyoruz. enable tag bir nevi token ve bu token'a göre browser deðiþiklikleri algýlýyor. ayný tag gönderirse header, o zaman browser deðiþiklik yapmýyor ve cache bellekten ekmeðini yiyor. 304 durum kodu bi þey deðiþmemiþ cache den oku demek.
+                // biz false yaptýk bu sayede browser cache çalýþmýyor ve serverdan bilgileri çekiyor. cacheControlMaxAge: 0 ise browser cache'yi ne kadar tutabilirin saniye cinsinden deðeri.
+                bundle.CreateJs("my-js-bundle", "~/js/").WithEnvironmentOptions(BundleEnvironmentOptions.Create().ForDebug(builder => builder.EnableCompositeProcessing().EnableFileWatcher().SetCacheBusterType<AppDomainLifetimeCacheBuster>().CacheControlOptions(enableEtag: false, cacheControlMaxAge: 0)).Build());
 
+                bundle.CreateCss("my-css-bundle", "~/css/site.css", "~/lib/bootstrap/dist/css/bootstrap.css");
             });
 
             app.UseEndpoints(endpoints =>

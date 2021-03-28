@@ -4,7 +4,9 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - SmidgeApp</title>
-    <link rel="stylesheet" href="my-css-bundle" />
+
+    <!-- geliştirme zamanında debug izin ver sıkıştırma ve paketleme yapma.  -->
+    <link rel="stylesheet" debug="true" href="my-css-bundle" />
 </head>
 <body>
     <header>
@@ -42,10 +44,11 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 
-    <environment names="Development"> <!-- geliştirme zamanında debug izin ver sıkıştırma ve paketleme yapma.  -->
+    <!-- geliştirme zamanında debug izin ver sıkıştırma ve paketleme yapma.  -->
+    <environment names="Development">
         <script src="my-js-bundle" debug="true"></script>
     </environment>
-    <environment names="Production">
+    <environment names="Staging,Production">
         <script src="my-js-bundle"></script>
     </environment>
 
